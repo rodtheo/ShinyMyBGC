@@ -88,7 +88,7 @@ RUN mongod --fork --dbpath /data/db --logpath /app/mongod.log && \
     mongod --shutdown &&\
     echo "OK"
 
-RUN echo "mongod --fork --dbpath /data/db --logpath /app/mongod.log" >> ~/.profile
+# RUN echo "mongod --fork --dbpath /data/db --logpath /app/mongod.log" >> ~/.profile
 
 #RUN pip3 install --upgrade pip
 #RUN pip install --no-cache-dir --force-reinstall -r app/requirements.txt
@@ -107,12 +107,20 @@ RUN Rscript -e  'install.packages("mongolite")'
 RUN Rscript -e  'install.packages("shinythemes")'
 RUN Rscript -e  'install.packages("shinycssloaders")'
 RUN Rscript -e  'install.packages("gggenomes")'
+RUN Rscript -e 'install.packages("BiocManager")'
+RUN Rscript -e 'BiocManager::install("ggtree")'
 
+RUN Rscript -e 'install.packages("devtools")'
+RUN Rscript -e 'devtools::install_github("thackl/thacklr")'
+RUN Rscript -e 'devtools::install_github("thackl/gggenomes")'
 
-
+CMD echo "ok"
 
 # expose port
-EXPOSE 3838
+#EXPOSE 3838
 
 # run app on container start
-CMD ["mongod", "--fork", "--dbpath", "/data/db", "--logpath", "/app/mongod3.log", "&&", "R", "-e", "shiny::runApp('/app', host = '0.0.0.0', port = 3838)"]
+#CMD ["mongod", "--fork", "--dbpath", "/data/db", "--logpath", "/app/mongod3.log", "&&", "R", "-e", "shiny::runApp('/app', host = '0.0.0.0', port = 3838)"]
+#COPY my_wrapper_script.sh ./app/my_wrapper_script.sh
+#RUN chmod +x ./app/my_wrapper_script.sh
+#CMD ./app/my_wrapper_script.sh
